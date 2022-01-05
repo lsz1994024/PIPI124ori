@@ -216,7 +216,7 @@ public class PIPI {
 
         logger.info("Estimating FDR...");
         // estimate T-D FDR
-        PFM(finalScoredPsms, buildIndexObj.returnPepProMap(), buildIndexObj.protPepNum, pepTruth, 9268);
+        PFM(finalScoredPsms, buildIndexObj.returnPepProMap(), buildIndexObj.protPepNum, pepTruth, "9268_TD");
         new EstimateFDR(finalScoredPsms);
 
         // estimate Percolator FDR
@@ -242,14 +242,11 @@ public class PIPI {
         logger.info("Done.");
     }
 
-    private void PFM(List<FinalResultEntry> resultList, Map<String, Set<String>> peptide0Map,  Map<String, Integer> protPepNum, Map<Integer, String> pepTruth, int srchId) {
+    private void PFM(List<FinalResultEntry> resultList, Map<String, Set<String>> peptide0Map,  Map<String, Integer> protPepNum, Map<Integer, String> pepTruth, String srchId) {
 
         System.out.println("PFM starts ========================");
         Map<String, Integer> pepTruthTimes = new HashMap<>();
         for (int scanNum : pepTruth.keySet()){
-//            if (scanNum == 13701 || scanNum == 2095 || scanNum == 2052 || scanNum == 22598){
-//                System.out.println("here");
-//            }
             String pepSeq = pepTruth.get(scanNum).replace('L', 'I');
             if (pepTruthTimes.containsKey(pepSeq)){
                 pepTruthTimes.put(pepSeq, pepTruthTimes.get(pepSeq)+1);
@@ -288,7 +285,8 @@ public class PIPI {
 
             String tempStr = scanNum+",";
             for (PepWithScore pepcand : pepCandisList){
-                tempStr += pepcand.pepSeq+","+pepcand.score+",";
+//                System.out.println(scanNum);
+                tempStr += pepcand.pepSeq+","+pepcand.score+","+pepcand.isDecoy+","+ pepcand.hasPTM+","+String.join("-",pepcand.proteins)+",";
             }
             candsStrs.put(scanNum, tempStr.substring(0, tempStr.length()-1)+"\n");
             List<PepWithScore> tempBackbonesList = new LinkedList<>();
@@ -300,7 +298,7 @@ public class PIPI {
             }
             double count = 1.0/tempBackbonesList.size();
             for (PepWithScore pep : tempBackbonesList){
-                pepWithScoreList.add(new PepWithScore(pep.pepSeq,tempTopScore,count));
+//                pepWithScoreList.add(new PepWithScore(pep.pepSeq,tempTopScore,count, false));
 
             }
         }
@@ -308,7 +306,7 @@ public class PIPI {
         System.out.println("Start writing ========================");
         String resultPath = srchId + ".candis.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultPath))) {
-            writer.write("scanNo,pep1,s1,pep2,s2,pep3,s3,pep4,s4,pep5,s5,pep6,s6,pep7,s7,pep8,s8,pep9,s9,pep10,s10,pep11,s11,pep12,s12,pep13,s13,pep14,s14,pep15,s15,pep16,s16,pep17,s17,pep18,s18,pep19,s19,pep20,s20\n");
+            writer.write("scanNo,pep1,s1,b1,m1,p1,pep2,s2,b2,m2,p2,pep3,s3,b3,m3,p3,pep4,s4,b4,m4,p4,pep5,s5,b5,m5,p5,pep6,s6,b6,m6,p6,pep7,s7,b7,m7,p7,pep8,s8,b8,m8,p8,pep9,s9,b9,m9,p9,pep10,s10,b10,m10,p10,pep11,s11,b11,m11,p11,pep12,s12,b12,m12,p12,pep13,s13,b13,m13,p13,pep14,s14,b14,m14,p14,pep15,s15,b15,m15,p15,pep16,s16,b16,m16,p16,pep17,s17,b17,m17,p17,pep18,s18,b18,m18,p18,pep19,s19,b19,m19,p19,pep20,s20,b20,m20,p20\n");
             for (int scanNo : candsStrs.keySet()) {
                 writer.write(candsStrs.get(scanNo));
             }
@@ -440,7 +438,7 @@ public class PIPI {
                         bestProtScore = protScore;
                     }
                 }
-                pepWithProtScore.add(new PepWithScore(pepSeq, bestProtScore, pep.score));
+//                pepWithProtScore.add(new PepWithScore(pepSeq, bestProtScore, pep.score, false));
             }
 
             Collections.sort(pepWithProtScore);

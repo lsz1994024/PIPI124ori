@@ -85,6 +85,9 @@ public class Search {
                     if (numCodeMap.containsKey(scanNum)) {
                         SparseVector scanCode = numCodeMap.get(scanNum);
 
+                        if (scanNum == 1820 && peptide.equals("FTHAETHSSIK")){
+                            System.out.println("here");
+                        }
                         double scanNormSquare = numCodeNormSquareMap.get(scanNum);
                         double score = 0;
                         scanSearched.add(scanNum);
@@ -282,7 +285,7 @@ public class Search {
                         rightFlank = proSeq.substring(startIdx + peptideString.length(), startIdx + peptideString.length() + 1);
                     }
                 }
-                peptideList.add(new Peptide(temp.peptide, temp.isDecoy(), massToolObj, maxMs2Charge, temp.score, leftFlank, rightFlank, globalRank));
+                peptideList.add(new Peptide(temp.peptide, temp.isDecoy(), massToolObj, maxMs2Charge, temp.score, leftFlank, rightFlank, globalRank, temp.containPTM()));
                 --globalRank;
             }
             outputMap.put(scanNum, peptideList);

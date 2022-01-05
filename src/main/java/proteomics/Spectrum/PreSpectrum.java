@@ -22,9 +22,11 @@ public class PreSpectrum {
     public TreeMap<Float, Float> preSpectrum (Map<Double, Double> peaksMap, float precursorMass, int precursorCharge, float ms2Tolerance, int scanNum) {
         // remove precursor peak from spectrum
         TreeMap<Float, Float> temp = removePrecursorPeak(peaksMap, precursorMass, precursorCharge, ms2Tolerance);
-
+        if (scanNum == 1627){
+            System.out.println("Here");
+        }
         // reduce noise
-        TreeMap<Float, Float> deionisedPlMap = deNoise(new TreeMap<>(temp.subMap(0f, precursorMass)));
+        TreeMap<Float, Float> deionisedPlMap = deNoise(new TreeMap<>(temp.subMap(0f, precursorMass))); //501 to  331
 //        if (scanNum == 49408){
 //            System.out.println("49408 denoised ");
 //            for (Map.Entry<Float, Float> p : deionisedPlMap.entrySet()){

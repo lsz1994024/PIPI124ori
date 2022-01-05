@@ -23,10 +23,10 @@ public class Peptide implements Comparable<Peptide>, Cloneable {
     private final String leftFlank;
     private final String rightFlank;
     private final int globalRank;
-
+    public boolean hasPTM;
     private final double normalizedCrossXcorr;
 
-    public Peptide(String peptideString, boolean isDecoy, MassTool massToolObj, int maxMs2Charge, double normalizedCrossXcorr, String leftFlank, String rightFlank, int globalRank) {
+    public Peptide(String peptideString, boolean isDecoy, MassTool massToolObj, int maxMs2Charge, double normalizedCrossXcorr, String leftFlank, String rightFlank, int globalRank, boolean hasPTM) {
         this.peptideString = peptideString;
         this.isDecoy = isDecoy;
         this.normalizedPeptideString = InferenceSegment.normalizeSequence(false, peptideString);
@@ -40,6 +40,7 @@ public class Peptide implements Comparable<Peptide>, Cloneable {
         this.leftFlank = leftFlank;
         this.rightFlank = rightFlank;
         this.globalRank = globalRank;
+        this.hasPTM = hasPTM;
     }
 
     public int getGlobalRank() {
@@ -86,7 +87,7 @@ public class Peptide implements Comparable<Peptide>, Cloneable {
     public Peptide clone() {
         Peptide other = null;
         try {
-            other = new Peptide(peptideString, isDecoy, massToolObj, maxMs2Charge, normalizedCrossXcorr, leftFlank, rightFlank, globalRank);
+            other = new Peptide(peptideString, isDecoy, massToolObj, maxMs2Charge, normalizedCrossXcorr, leftFlank, rightFlank, globalRank, hasPTM);
             if (varPTMMap != null) {
                 other.setVarPTM(varPTMMap.clone());
             }

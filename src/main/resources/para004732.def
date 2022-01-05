@@ -4,8 +4,9 @@ percolator_path = /usr/bin/percolator # Please input absolute path of Percolator
 
 # Database
 #/home/slaiad/Code/PIPI124/PIPI124ori/src/main/resources/para004732.def /home/slaiad/Data/PXD004732/01625b_GA1-TUM_first_pool_1_01_01-2xIT_2xHCD-1h-R1.mgf
-db = /home/slaiad/Data/Chick9330/uniprot_homo_canonical_isoform.fasta
-missed_cleavage = 2 # maximum number of missed cleavage
+#db = /home/slaiad/Data/Chick9330/uniprot_homo_canonical_isoform.fasta
+db = /home/slaiad/Data/PXD004732/03/4732_pool03_Con_MC2.fasta
+missed_cleavage = 0 # maximum number of missed cleavage
 min_precursor_mass = 600
 max_precursor_mass = 5000 # for benchmarking comet
 
@@ -23,8 +24,8 @@ mz_bin_offset = 0
 
 # Modification related
 PTM_db = /home/slaiad/Data/Chick9330/unimod.txt
-min_ptm_mass = -0
-max_ptm_mass = 0
+min_ptm_mass = -250
+max_ptm_mass = 250
 
 # Fix modification
 G = 0
@@ -53,7 +54,8 @@ n = 0 # nterm mod
 
 # Enzyme digestion specificities
 # enzyme name  	 is cut from C-term 	 cleavage site 	 protection site
-Trypsin        	 1                  	 KR            	 P
+#Trypsin        	 1                  	 KR            	 P
+None        	 1                  	 -            	 -
 # TrypsinR     	 1                  	 R             	 P
 # LysC         	 1                  	 K             	 -
 # Chymotrypsin 	 1                  	 FYW           	 P

@@ -54,18 +54,23 @@ public class MassTool {
         massTable.put("Patom", 30.97376151f);
         massTable.put("Satom", 31.97207069f);
 
-        if (protectionSite.contentEquals("-")) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
-        } else if (cleavageFromCTerm) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?=[^" + protectionSite + "])");
-        } else {
-            digestSitePattern = Pattern.compile("(?<=[^" + protectionSite + "])" + "[" + cleavageSite + "]");
+        if (cleavageSite.contentEquals("-")){
+            digestSitePattern = Pattern.compile("-"); //'-'will never be matched
+        }else{
+            if (protectionSite.contentEquals("-")) {
+                digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
+            } else if (cleavageFromCTerm) {
+                digestSitePattern = Pattern.compile("[" + cleavageSite + "](?=[^" + protectionSite + "])");
+            } else {
+                digestSitePattern = Pattern.compile("(?<=[^" + protectionSite + "])" + "[" + cleavageSite + "]");
+            }
         }
     }
 
     public float calResidueMass(String seq){ // Caution: nterm mod is not included!!!!!
         float totalMass = 0;
         int length = seq.length();
+//        System.out.println("lsz "+seq);
         for (int idx = 0; idx < length; ++idx) {
             totalMass += massTable.get(seq.substring(idx, idx + 1));
         }
@@ -80,7 +85,7 @@ public class MassTool {
         for (int i = 0; i <= missedCleavage; ++i) {
             for (int[] digestRange1 : digestRangeMap.get(i)) {
                 String subString = proSeq.substring(digestRange1[0], digestRange1[1]);
-                peptideSeqSet.add(subString.replace('L','I'));
+                peptideSeqSet.add(subString);
             }
         }
         return peptideSeqSet;

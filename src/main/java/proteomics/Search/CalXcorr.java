@@ -24,7 +24,8 @@ public class CalXcorr {
     public CalXcorr(Map<Integer, List<Peptide>> numCandidateMap, Map<Integer, SpectrumEntry> numSpectrumMap, MassTool massToolObj, BuildIndex buildIndexObj, Map<Integer, List<Peptide>> numCandidateMapNoPTMStep) {
         this.massToolObj = massToolObj;
         PreSpectrum preSpectrumObj = new PreSpectrum(massToolObj);
-
+        Map<String, Set<String>> peptideProteinMap = buildIndexObj.returnPepProMap();
+        Map<String, String> decoyPepProteinMap = buildIndexObj.returnDecoyPepProMap();
         for (int scanNum : numCandidateMap.keySet()) {
             // prepare the spectrum
             SpectrumEntry spectrum = numSpectrumMap.get(scanNum);
@@ -38,7 +39,16 @@ public class CalXcorr {
             FinalResultEntry psm = new FinalResultEntry(scanNum);
             List<Peptide> mycandidateList = numCandidateMapNoPTMStep.get(scanNum);
             for (Peptide peptide : mycandidateList) {
-                PepWithScore pS = new PepWithScore(peptide.getPTMFreeSeq().replace('L','I'), peptide.getNormalizedCrossCorr(), -1);
+                Set<String> protSet = new HashSet<>();
+                if (peptideProteinMap.containsKey(peptide.getPTMFreeSeq())){
+                    protSet.addAll(peptideProteinMap.get(peptide.getPTMFreeSeq()));
+                }else{
+                    protSet.add(decoyPepProteinMap.get(peptide.getPTMFreeSeq()));
+                }
+                PepWithScore pS = new PepWithScore(peptide.getPTMFreeSeq(), peptide.getNormalizedCrossCorr(), -1, peptide.isDecoy(), protSet, peptide.hasPTM);
+//                if (peptideProteinMap.get(peptide.getPTMFreeSeq()).size() == 0){
+//                    System.out.println("lsz");
+//                }
                 psm.pepCandisList.add(pS);
             }
             List<Peptide> candidateList = numCandidateMap.get(scanNum);

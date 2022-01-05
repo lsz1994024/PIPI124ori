@@ -12,7 +12,7 @@ public class Parameter {
     private static final Logger logger = LoggerFactory.getLogger(Parameter.class);
     private static final Pattern commentLinePattern = Pattern.compile("^#.*");
     private static final Pattern linePattern = Pattern.compile("([^#]+)=([^#]+)#*.*");
-    private static final Pattern enzymePattern = Pattern.compile("(.+)\\s+([01])\\s+([A-Z]+)\\s+([A-Z\\-]+)");
+    private static final Pattern enzymePattern = Pattern.compile("(.+)\\s+([01])\\s+([A-Z\\-]+)\\s+([A-Z\\-]+)");
 
     private Map<String, String> parameterMap = new HashMap<>();
 
@@ -31,6 +31,7 @@ public class Parameter {
                         parameterMap.put(parameterName, parameterValue);
                     } else {
                         Matcher enzymeMatcher = enzymePattern.matcher(line);
+//                        System.out.println(enzymeMatcher.group(1).trim()+enzymeMatcher.group(2).trim()+enzymeMatcher.group(3).trim()+enzymeMatcher.group(4).trim());
                         if (enzymeMatcher.matches()) {
                             parameterMap.put("enzyme_name", enzymeMatcher.group(1).trim());
                             parameterMap.put("cleavage_from_c_term", enzymeMatcher.group(2).trim());

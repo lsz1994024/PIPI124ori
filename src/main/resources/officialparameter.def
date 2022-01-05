@@ -5,7 +5,7 @@ percolator_path = /usr/bin/percolator # Please input absolute path of Percolator
 # Database
 #/home/slaiad/Code/PIPI124/PIPI124master/src/main/resources/officialparameter.def /home/slaiad/Data/Simulation_Data/02A.pin.selected_psm.mgf
 db = /home/slaiad/Data/Simulation_Data/uniprot_homo_sapiens.fasta
-missed_cleavage = 2 # maximum number of missed cleavage
+missed_cleavage = 1 # maximum number of missed cleavage
 min_precursor_mass = 600
 max_precursor_mass = 5000 # for benchmarking comet
 
@@ -17,8 +17,8 @@ min_peak_num = 10
 
 # Tolerance
 ms1_tolerance_unit = 1 # 0: Da; 1: ppm
-ms1_tolerance = 10
-ms2_tolerance = 0.02
+ms1_tolerance = 5
+ms2_tolerance = 0.01
 mz_bin_offset = 0
 
 # Modification related

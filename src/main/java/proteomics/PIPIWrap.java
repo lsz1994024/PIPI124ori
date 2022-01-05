@@ -66,10 +66,9 @@ public class PIPIWrap implements Callable<List<FinalResultEntry>> {
 
                     // Coding
                     List<ThreeExpAA> expAaLists = inference3SegmentObj.inferSegmentLocationFromSpectrum(scanNum, spectrumEntry);
-//                    if (scanNum == 33428){
-//                        for (int i =0; i < expAaLists.size(); i++){
-//                            System.out.println(expAaLists.get(i).getAAString());}
-//                    }
+                    if (spectrumEntry.scanNum == 1627){
+                        System.out.println("here");
+                    }
                     if (!expAaLists.isEmpty()) {
                         numExp3aaLists.put(scanNum, expAaLists);
                         numCodeMap.put(scanNum, inference3SegmentObj.generateSegmentIntensityVector(expAaLists));
@@ -104,7 +103,7 @@ public class PIPIWrap implements Callable<List<FinalResultEntry>> {
                 if (!truthScore.containsKey(scanNum)){
                     continue;
                 }
-                if (scanNum == 13701 || scanNum == 2095 || scanNum == 2052 || scanNum == 22598){
+                if (scanNum == 2537 || scanNum == 2095 || scanNum == 2052 || scanNum == 22598){
                     for (Peptide pep : ptmOnlyMap.get(scanNum)){
                         System.out.println("ptmOnly "+pep.getPTMFreeSeq()+": "+pep.getNormalizedCrossCorr());
                     }
@@ -151,7 +150,7 @@ public class PIPIWrap implements Callable<List<FinalResultEntry>> {
 //                    System.out.println(scanNum + " ,top1, "+ topScore);
                     numRank1++;
                 }
-                System.out.println(scanNum + " , '"+ topSeq+  "' , "+ topSeq.equals(pepTruth.get(scanNum)));
+//                System.out.println(scanNum + " , '"+ topSeq+  "' , "+ topSeq.equals(pepTruth.get(scanNum)));
             }
 //            System.out.println(numRank1+" "+numRank);
             Map<Integer, List<Peptide>> numCandidateMapNoPTMStep = new HashMap<>(ptmFreeMap);

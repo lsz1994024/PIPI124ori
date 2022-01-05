@@ -61,12 +61,13 @@ public class BuildIndex {
         proPeptideMap = dbToolObj.returnSeqMap();
 
         // define a new MassTool object
+        System.out.println(parameterMap.get("cleavage_from_c_term"));
         massToolObj = new MassTool(missedCleavage, fixModMap, parameterMap.get("cleavage_site"), parameterMap.get("protection_site"), Integer.valueOf(parameterMap.get("cleavage_from_c_term")) == 1, ms2Tolerance, oneMinusBinOffset);
         massTable = massToolObj.returnMassTable();
 
         // build database
         buildPeptideMap();
-//        buildDecoyPepChainMap();
+        buildDecoyPepChainMap();
         buildMassPeptideMap();
     }
 
@@ -114,7 +115,7 @@ public class BuildIndex {
                 if (pep.contains("B") || pep.contains("J") || pep.contains("X") || pep.contains("Z")) {
                     continue;
                 }
-                pepForProt.add(pep.replace('L', 'I'));
+                pepForProt.add(pep);
             }
             int pepNumForProt = pepForProt.size();
             protPepNum.put(proId, pepNumForProt);
@@ -123,7 +124,7 @@ public class BuildIndex {
                 if (peptide.contains("B") || peptide.contains("J") || peptide.contains("X") || peptide.contains("Z")) {
                     continue;
                 }
-                peptide = peptide.replace('L','I');
+//                peptide = peptide.replace('L','I');
 
                 float massTemp = massToolObj.calResidueMass(peptide) + massTable.get("n") + massTable.get("H2O"); // calMass just calculate the residue mass, so we should add a H2O
                 if ((massTemp <= maxPrecursorMass) && (massTemp >= minPrecursorMass)) {
@@ -133,14 +134,14 @@ public class BuildIndex {
                     String templateSeq = peptide.replace('L', 'I'); // "L" and "I" have the same mass.
                     forCheckDuplicate.add(templateSeq);
 
-                    if (peptideProMap.containsKey(peptide.replace('L', 'I'))) {
-                        Set<String> proList = peptideProMap.get(peptide.replace('L', 'I'));
+                    if (peptideProMap.containsKey(peptide)) {
+                        Set<String> proList = peptideProMap.get(peptide);
                         proList.add(proId);
-                        peptideProMap.put(peptide.replace('L', 'I'), proList);
+                        peptideProMap.put(peptide, proList);
                     } else {
                         Set<String> proList = new HashSet<>();
                         proList.add(proId);
-                        peptideProMap.put(peptide.replace('L', 'I'), proList);
+                        peptideProMap.put(peptide, proList);
                     }
                 }
             }
@@ -150,7 +151,7 @@ public class BuildIndex {
     private void buildDecoyPepChainMap() {
         Set<String> peptideSet = peptideProMap.keySet();
         for (String originalPeptide : peptideSet) {
-            String decoyPeptide = shuffleSeq2(originalPeptide);
+            String decoyPeptide = trueShuffle(originalPeptide);
             if (decoyPeptide.isEmpty()) {
                 continue;
             }
@@ -226,6 +227,28 @@ public class BuildIndex {
                 }
             } while ((forCheckDuplicate.contains(sb.toString().replace('L', 'I'))) && (loopTime > 0));
             return sb.toString();
+        }
+    }
+
+    private String trueShuffle(String seq) {
+        if ((seq.charAt(seq.length() - 1) == 'K') || (seq.charAt(seq.length() - 1) == 'R')) {
+            List<String> aaList = Arrays.asList(seq.substring(0, seq.length()-1).split(""));
+            Collections.shuffle(aaList);
+            String decoySeq = String.join("", aaList) + seq.substring(seq.length() - 1, seq.length());
+            if (forCheckDuplicate.contains(decoySeq.replace('L', 'I'))) {
+                return "";
+            } else {
+                return decoySeq;
+            }
+        } else {
+            List<String> aaList = Arrays.asList(seq.split(""));
+            Collections.shuffle(aaList);
+            String decoySeq = String.join("", aaList);
+            if (forCheckDuplicate.contains(decoySeq.replace('L', 'I'))) {
+                return "";
+            } else {
+                return decoySeq;
+            }
         }
     }
 

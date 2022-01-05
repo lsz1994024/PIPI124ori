@@ -111,6 +111,9 @@ public class InferenceSegment {
 
     public List<ThreeExpAA> inferSegmentLocationFromSpectrum(int scanNum, SpectrumEntry spectrumEntry) {
         // Add four virtual peak.
+        if (scanNum == 1627){
+            System.out.println("here");
+        }
         TreeMap<Float, Float> plMap = spectrumEntry.getPlMapWithVirtualPeaks();
         if (plMap == null) {
             plMap = addVirtualPeaks(spectrumEntry, scanNum);
@@ -140,6 +143,9 @@ public class InferenceSegment {
     }
 
     public Set<Segment> cutTheoSegment(String peptide) {
+//        if (peptide.contentEquals("IGYDHGHIEHK")){
+//            System.out.println("here");
+//        }
         String normalizedPeptide = normalizeSequence(lowResolution, peptide);
         Set<Segment> segmentSet = new HashSet<>();
         if (normalizedPeptide.length() == tagLength) {
@@ -181,6 +187,9 @@ public class InferenceSegment {
             return finalVector;
         } else {
             for (Segment segment : cutSegmentSet) {
+//                if (!aaVectorTemplate.containsKey(segment)){
+//                    aaVectorTemplate.put(segment, aaVectorTemplate.size());
+//                }
                 finalVector.put(aaVectorTemplate.get(segment));
             }
             return finalVector;
